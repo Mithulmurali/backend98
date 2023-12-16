@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-mongoose.connect("mongodb+srv://mabledevassy:mabledevassy@cluster0.gbmrfr9.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://mithul:mithul@cluster0.fac1wc4.mongodb.net/?retryWrites=true&w=majority")
 .then(()=>{console.log("DB CONNECTED")})
 .catch(err=>console.log(err));
 
@@ -16,8 +16,11 @@ const studentschema=new sc({
         Admno:Number,
         Name:String,
         Age:Number,
-        Course:String
-        
+        Course:String,
+        image1:{
+            data:Buffer,
+            contentType:String
+        }
     });
 
 var studentmodel=mongoose.model("studentdetails",studentschema)

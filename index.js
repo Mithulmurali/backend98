@@ -2,6 +2,9 @@ const express=require("express")
 const cors=require("cors")
 
 const app=new express();
+const multer=require('multer')
+const storage=multer.memoryStorage();
+const upload=multer({storage:storage});
 const studentmodel=require('./model/studentdetails')
 app.use(express.urlencoded({extended:true}))
 app.use(express.json());
@@ -22,11 +25,30 @@ app.put('/edit/:id',async(request,response)=>{
     response.send("Data updated")
 })
 
-app.post('/new',(request,response)=>{
-    console.log(request.body)
-    new studentmodel(request.body).save();
-    response.send("records saved")
+// app.post('/new',(request,response)=>{
+//     console.log(request.body)
+//     new studentmodel(request.body).save();
+//     response.send("records saved")
 
+// })
+app.post('/new',upload.single('image'),async(request,response)=>{
+    
+    try{
+
+        const{Admno,Name,Age,Course}=request.body
+        const newdata=new studentmodel({
+            Admno,Name,Age,Course,
+            image1:{
+                data:request.file.buffer,
+                contentType:request.file.mimetype,
+            }
+        })
+        await newdata.save();
+        response.status(200).json({message:'Record Saved'});
+    }
+    catch (error){
+        response.status(500).json({error:'Internal Server Error'});
+    }
 })
 app.listen(3005,(request,response)=>{
     console.log("port is running 3005")
